@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible"
+        content="IE=edge" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon"
+        href="data:image/x-icon;"
+        type="image/x-icon" />
+  <title>Todo-applikation</title>
+</head>
+
+<body>
+  <main id="root"
+        class="pt-24 bg-gradient-to-br from-purple-500 to-yellow-400 min-h-screen">
+    <h1 class="text-center mb-10 text-7xl text-purple-900">Todo-lista</h1>
+    <!-- Sektion som gör att formuläret och listan kommer att hamna bredvid varandra. -->
+    <section class="flex gap-10 w-full xl:w-4/5 mx-2 xl:mx-auto bg-white bg-opacity-75 p-5 rounded-lg">
+      <!-- Sektion för formuläret -->
+      <section class="flex-1">
+        <h2 class="mb-6 text-3xl text-orange-900">Lägg till en uppgift</h2>
+        <!-- Formuläret är döpt till todoForm och det namnet kan användas för att söka fram formuläret direkt i JavaScript-koden. -->
+        <form id="todoForm"
+              name="todoForm">
+          <section class="mb-2">
+            <label class="block pr-5 mb-2 text-xl"
+                   for="title">Titel</label>
+            <!-- Detta p-element är dolt från början med hjälp av tailwinds klass "hidden". Det kommer sedan att visas vid valideringsfel.
+            
+            P-elementet är previousSiblingElement till inputfälten. Det gäller för alla efterföljande p-element som ligger innan ett input-fält. Detta faktum används i script.js när ett valideringsmeddelande ska sättas här. -->
+            <p class="message text-sm text-red-700 mb-2 hidden">
+              Error message
+            </p>
+            <!-- Även benämningen på formulärets fält är av relevans eftersom de sätts som egenskap på formulärobjektet i JavaScript. Fältet nedan går alltså att nå via todoForm.title. Detta gäller även för efterföljande fält, fast via deras namn förstås. Detta gör att det är viktigt att man sätter id och name på fälten till något som är ett godkänt variabelnamn i JavaScript, alltså inte använda bindestreck eller mellanslag.              
+              -->
+            <input type="text"
+                   id="title"
+                   name="title"
+                   class="w-full rounded-md border-yellow-500 border-2 focus-within:outline-none focus:border-yellow-600 px-4 py-2" />
+          </section>
+          <!-- Följande sektioner är likadana för övriga fält i formuläret; description och dueDate -->
+          <section class="mb-2">
+            <label class="block pr-5 mb-2 text-xl"
+                   for="description">Beskrivning</label>
+            <p class="message text-sm text-red-700 mb-2 hidden">
+              Error message
+            </p>
+            <textarea maxlength="500"
+                      rows="5"
+                      id="description"
+                      name="description"
+                      class="resize-none w-full rounded-md border-yellow-500 border-2 focus-within:outline-none focus:border-yellow-600 px-4 py-2"></textarea>
+          </section>
+          <section class="mb-2">
+            <label class="block pr-5 mb-2 text-xl"
+                   for="title">Utförd senast</label>
+            <p class="message text-sm text-red-700 mb-2 hidden">
+              Error message
+            </p>
+            <input type="date"
+                   id="dueDate"
+                   name="dueDate"
+                   class="w-full rounded-md border-yellow-500 border-2 focus-within:outline-none focus:border-yellow-600 px-4 py-2" />
+          </section>
+          <!-- Knappen är av typen submit för att den ska vara knuten till formulärets submit-event.  -->
+          <button name="submitTodoForm"
+                  class="rounded-md bg-yellow-500 hover:bg-yellow-400 px-4 py-1"
+                  type="submit">
+            Spara
+          </button>
+        </form>
+      </section>
+      <!-- Sektion där listan med uppgifter ska bo. Placeras bredvid formuläret. -->
+      <section class="flex-1 px-5">
+        <h2 class="mb-6 text-3xl text-orange-900">Alla uppgifter</h2>
+        <!-- Ul-element som kommer att fyllas på dynamiskt med li-element för varje uppgift i listan -->
+        <ul id="todoList">
+          <!-- Allt innanför här ska skapas dynamiskt med JavaScript, så se till att inget list-element läggs till här i denna HTML-fil.  -->
+        </ul>
+      </section>
+    </section>
+  </main>
+  <script src="Api.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
