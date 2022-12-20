@@ -99,6 +99,7 @@ class Api {
 
     Egentligen skulle jag ha kunnat satt exakt samma kedja av then-anrop här som vid create (POST) och getAll (READ), men det är inte helt relevant vad som kommer till baka från ett delete-anrop. 
     */
+
     return fetch(`${this.url}/${id}`, {
       method: "DELETE",
     })
@@ -111,26 +112,17 @@ class Api {
   
   Beroende på om ni gör frontend eller backend först i labben behöver ni på något av ställena bestämma er för en av metoderna PUT eller PATCH för denna förfrågan. (Du får välja själv, läs på om vad som verkar mest vettigt för din lösning). Använder du metoden PATCH här behöver i alla fall det vara patch som tas emot i servern också, app.patch(...), och vice versa om du väljer PUT. 
   */
-
-  update(id) {
-    console.log(`Updating task with id ${id}`);
-    fetch(`${this.url}/${id}`, {
+  update(id, data) {
+    console.log("Update metoden");
+    let JSONData = JSON.stringify(data);
+    console.log("JSONData:", JSONData);
+    return fetch(`${this.url}/${id}`, {
+      method: "PATCH",
+      body: JSONData,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
-      method: "PATCH", // Fields that to be updated are passed
-      body: JSON.stringify({
-        completed: true,
-      }),
-    })
-      .then(function (response) {
-        // console.log(response);
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
-      });
+    });
   }
   /*   
   För att utföra en förfrågan med hjälp av fetch() behöver servern veta några saker om förfrågan (request). Först och främst behövs en url dit förfrågan ska skickas, sedan behövs också ett objekt med inställningar och detaljer om förfrågan, detta objekt kallas vidare "{options}". Url och {options} kan sättas antingen i ett requestobjekts konstruktor; new Request(url, {options}), såsom det görs i create-metoden. Eller så skulle man kunna ange allt som annars skulle ha skickats till Request-objektets konstruktor inom parenteserna hos fetch() istället; fetch(url, {options})

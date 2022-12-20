@@ -188,6 +188,13 @@ function renderList() {
 
     /* Koll om det finns någonting i tasks och om det är en array med längd större än 0 */
     if (tasks && tasks.length > 0) {
+      //sorterar tasks efter datum
+      tasks.sort(function (a, b) {
+        return a.dueDate > b.dueDate;
+      });
+      tasks.sort(function (a, b) {
+        return a.completed > b.completed;
+      });
       /* Om tasks är en lista som har längd större än 0 loopas den igenom med forEach. forEach tar, likt then, en callbackfunktion. Callbackfunktionen tar emot namnet på varje enskilt element i arrayen, som i detta fall är ett objekt innehållande en uppgift.  */
       tasks.forEach((task) => {
         /* Om vi bryter ned nedanstående rad får vi något i stil med:
@@ -222,8 +229,8 @@ function renderTask({ id, title, description, dueDate, completed }) {
 
   let html = "";
   if (completed) {
-    html = `  <li class="select-none mt-2 py-2 border-b border-amber-300">
-    <div class="flex items-center bg-slate-400">
+    html = `  <li class="select-none mt-2 py-2 border-b border-amber-300 bg-slate-300">
+    <div class="flex items-center">
       <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
       <div>
         <span>${dueDate}</span>
@@ -251,10 +258,14 @@ function renderTask({ id, title, description, dueDate, completed }) {
       <p class="ml-8 mt-2 text-xs italic">${description}</p>
   `);
 
+  let boxState = "";
+  if (completed) {
+    boxState = "checked";
+  }
   /* När html-strängen eventuellt har byggts på med HTML-kod för description-egenskapen läggs till sist en sträng motsvarande sluttaggen för <li>-elementet dit. */
   html += `</li>
-   <label for="completedCheckbox">Klart!</label>
-   <input type="checkbox" id="completedCheckbox" name="completedCheckbox" onclick="updateTask(${id})">
+   <label>Klart!</label>
+   <input class="completedBox" type="checkbox" onclick="updateTask(${id}, event)"${boxState}>
     `;
   /***********************Labb 2 ***********************/
   /* I ovanstående template-sträng skulle det vara lämpligt att sätta en checkbox, eller ett annat element som någon kan klicka på för att markera en uppgift som färdig. Det elementet bör, likt knappen för delete, också lyssna efter ett event (om du använder en checkbox, kolla på exempelvis w3schools vilket element som triggas hos en checkbox när dess värde förändras.). Skapa en eventlyssnare till det event du finner lämpligt. Funktionen behöver nog ta emot ett id, så den vet vilken uppgift som ska markeras som färdig. Det skulle kunna vara ett checkbox-element som har attributet on[event]="updateTask(id)". */
@@ -280,14 +291,19 @@ function deleteTask(id) {
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva den funktion som angivits som eventlyssnare för när någon markerar en uppgift som färdig. Jag pratar alltså om den eventlyssnare som angavs i templatesträngen i renderTask. Det kan t.ex. heta updateTask. 
 
+
 Funktionen bör ta emot ett id som skickas från <li>-elementet.
 */
-
-function updateTask(id) {
-  console.log("Update ", id);
-  api.update(id);
+function updateTask(id, event) {
+  event.preventDefault();
+  let isChecked = event.target.checked;
+  console.log("HEJ");
+  console.log("Checkbox:", isChecked);
+  const data = {
+    completed: isChecked,
+  };
+  api.update(id, data).then((result) => renderList());
 }
-
 /* Inuti funktionen kan ett objekt skickas till api-metoden update. Objektet ska som minst innehålla id på den uppgift som ska förändras, samt egenskapen completed som true eller false, beroende på om uppgiften markerades som färdig eller ofärdig i gränssnittet. 
 
 Det finns några sätt att utforma det som ska skickas till api.update-metoden. 
@@ -304,3 +320,7 @@ Om du hittar något annat sätt som funkar för dig, använd för all del det, s
 
 /* Slutligen. renderList anropas också direkt, så att listan visas när man först kommer in på webbsidan.  */
 renderList();
+document.addEventListener("DOMContentLoaded", function (e) {
+  const checkboxes = document.getElementsByClassName("completedBox");
+  console.log(checkboxes.length);
+});
