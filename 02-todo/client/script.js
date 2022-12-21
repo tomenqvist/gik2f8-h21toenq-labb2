@@ -136,9 +136,15 @@ function onSubmit(e) {
 
     /* Anrop till funktion som har hand om att skicka uppgift till api:et */
     saveTask();
+    clearFields();
   }
 }
-
+function clearFields() {
+  let descriptionText = document.getElementById("description");
+  let titleText = document.getElementById("title");
+  descriptionText.value = "";
+  titleText.value = "";
+}
 /* Funktion för att ta hand om formulärets data och skicka det till api-klassen. */
 function saveTask() {
   /* Ett objekt vid namn task byggs ihop med hjälp av formulärets innehåll */
@@ -192,6 +198,7 @@ function renderList() {
       tasks.sort(function (a, b) {
         return a.dueDate > b.dueDate;
       });
+      //Sedan efter om den är completed eller inte
       tasks.sort(function (a, b) {
         return a.completed > b.completed;
       });
@@ -227,26 +234,35 @@ function renderTask({ id, title, description, dueDate, completed }) {
   
   När eventlyssnaren kopplas till knappen här nedanför, görs det däremot i HTML-kod och inte JavaScript. Man sätter ett HTML-attribut och refererar till eventlyssnarfunktionen istället. Då fungerar det annorlunda och parenteser är tillåtna. */
 
-  let html = "";
+  //Variabler för att förändra styling på listobjekten, initieras med värden där de inte är gjorda
+  let completedStatusH3 = "text-purple-900";
+  let completedStatusLiBG = "";
+  let completedBtn =
+    "bg-amber-500 text-amber-800 hover:bg-red-400 hover:scale-150 transition-all hover:drop-shadow-md";
+  let dateIsDue = "";
+
   if (completed) {
-    html = `  <li class="select-none mt-2 py-2 border-b border-amber-300 bg-slate-300">
-    <div class="flex items-center">
-      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
-      <div>
-        <span>${dueDate}</span>
-        <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
-      </div>
-    </div>`;
-  } else {
-    html = `  <li class="select-none mt-2 py-2 border-b border-amber-300">
-    <div class="flex items-center">
-      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
-      <div>
-        <span>${dueDate}</span>
-        <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
-      </div>
-    </div>`;
+    completedStatusH3 = "text-slate-500 line-through";
+    completedBtn =
+      "bg-slate-400 text-black-900 hover:bg-red-400 hover:scale-150 transition-all hover:drop-shadow-md";
+    completedStatusLiBG = "bg-slate-300";
   }
+  //Skapar dagens datum och konverterar dueDate till ett datum och jämför om datumet har passerat
+  const taskDate = new Date(dueDate);
+  const date = new Date();
+  if (taskDate < date && !completed) {
+    dateIsDue = 'class="text-red-500 font-bold"';
+  }
+
+  let html = `
+  <li class="select-none mt-2 py-2 border-b border-amber-300 ${completedStatusLiBG} rounded-xl">
+    <div class="flex items-center">
+      <h3 class="pl-2 mb-3 flex-1 text-xl font-bold ${completedStatusH3} uppercase">${title}</h3>
+      <div>
+        <span ${dateIsDue}>${dueDate}</span>
+        <button onclick="deleteTask(${id})" class="mr-2 inline-block ${completedBtn} text-xs px-3 py-1 rounded-md ml-2">Ta bort</button>
+      </div>
+    </div>`;
 
   /* Här har templatesträngen avslutats tillfälligt för att jag bara vill skriva ut kommande del av koden om description faktiskt finns */
 
@@ -265,7 +281,7 @@ function renderTask({ id, title, description, dueDate, completed }) {
   /* När html-strängen eventuellt har byggts på med HTML-kod för description-egenskapen läggs till sist en sträng motsvarande sluttaggen för <li>-elementet dit. */
   html += `</li>
    <label>Klart!</label>
-   <input class="completedBox" type="checkbox" onclick="updateTask(${id}, event)"${boxState}>
+   <input class="completedBox accent-cyan-700" type="checkbox" onclick="updateTask(${id}, event)"${boxState}>
     `;
   /***********************Labb 2 ***********************/
   /* I ovanstående template-sträng skulle det vara lämpligt att sätta en checkbox, eller ett annat element som någon kan klicka på för att markera en uppgift som färdig. Det elementet bör, likt knappen för delete, också lyssna efter ett event (om du använder en checkbox, kolla på exempelvis w3schools vilket element som triggas hos en checkbox när dess värde förändras.). Skapa en eventlyssnare till det event du finner lämpligt. Funktionen behöver nog ta emot ett id, så den vet vilken uppgift som ska markeras som färdig. Det skulle kunna vara ett checkbox-element som har attributet on[event]="updateTask(id)". */
@@ -295,9 +311,8 @@ function deleteTask(id) {
 Funktionen bör ta emot ett id som skickas från <li>-elementet.
 */
 function updateTask(id, event) {
-  event.preventDefault();
+  //event.preventDefault();
   let isChecked = event.target.checked;
-  console.log("HEJ");
   console.log("Checkbox:", isChecked);
   const data = {
     completed: isChecked,
@@ -320,7 +335,3 @@ Om du hittar något annat sätt som funkar för dig, använd för all del det, s
 
 /* Slutligen. renderList anropas också direkt, så att listan visas när man först kommer in på webbsidan.  */
 renderList();
-document.addEventListener("DOMContentLoaded", function (e) {
-  const checkboxes = document.getElementsByClassName("completedBox");
-  console.log(checkboxes.length);
-});
