@@ -1,1 +1,37 @@
-[{"id":4,"title":"Göra rödbetssallad","description":"https://www.ica.se/recept/rodbetssallad-med-apple-727468/","dueDate":"2022-12-23","completed":true},{"id":5,"title":"Laboration 3 AI","description":"A* maze","dueDate":"2022-12-15","completed":false},{"id":6,"title":"hsjdada","description":"saddsdsa","dueDate":"2022-12-15","completed":false}]
+[
+  {
+    "id": 4,
+    "title": "Göra rödbetssallad",
+    "description": "https://www.ica.se/recept/rodbetssallad-med-apple-727468/",
+    "dueDate": "2022-12-23",
+    "completed": false
+  },
+  {
+    "id": 5,
+    "title": "Laboration 3 AI",
+    "description": "A* maze",
+    "dueDate": "2022-12-15",
+    "completed": false
+  },
+  {
+    "id": 8,
+    "title": "Lab 2 GIK2F8",
+    "description": "",
+    "dueDate": "2022-12-25",
+    "completed": true
+  },
+  {
+    "id": 9,
+    "title": "Dugga gik2f8",
+    "description": "",
+    "dueDate": "2023-01-10",
+    "completed": false
+  },
+  {
+    "id": 10,
+    "title": "Dugga AI",
+    "description": "",
+    "dueDate": "2023-01-12",
+    "completed": false
+  }
+]
